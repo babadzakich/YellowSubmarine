@@ -1,0 +1,50 @@
+<<<<<<< HEAD
+#include <stdio.h>
+
+int main()
+{
+    int minimal_number = 10001, maximal_number = 0,minimal_index, maximal_index, amount_of_digits;
+    scanf("%d", &amount_of_digits);
+    
+    for(int index = 1; index <= amount_of_digits; index++){
+        int digit;
+        scanf("%d", &digit);
+        
+        if(digit < minimal_number){
+            minimal_number = digit;
+            minimal_index = index;
+        }
+       
+         if(digit > maximal_number){
+            maximal_number = digit;
+            maximal_index = index;
+        }
+    }
+    printf("%d %d %d %d", minimal_number, minimal_index, maximal_number, maximal_index);
+   return 0;
+}
+=======
+#include <stdio.h>
+
+int main()
+{
+    int digit, minimal_number = 10000001, maximal_number = -1000001,minimal_index = 0, maximal_index = 0, amount_of_digits;
+    scanf("%d", &amount_of_digits);
+    
+    for(int index = 0; index < amount_of_digits; index++){
+        scanf("%d", &digit);
+        
+        if(digit < minimal_number){
+            minimal_number = digit;
+            minimal_index = index + 1;
+        }
+       
+        if(digit > maximal_number){
+            maximal_number = digit;
+            maximal_index = index + 1;
+        }
+    }
+    printf("%d %d %d %d\n", minimal_number, minimal_index, maximal_number, maximal_index);
+   return 0;
+}
+>>>>>>> 4414e47 (added solve for 6th task)
