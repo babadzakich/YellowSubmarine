@@ -21,15 +21,11 @@ void bitsetZero ( bitword * arr , int num )
 //возвращает значение idx-ого бита (0 или 1)
 int bitsetGet ( const bitword * arr , int idx )
 {
-    int bitPosition = 7-idx%8;
-    idx /= 8;
+    int bitPosition = idx%(sizeof(bitword) *8);
+    idx /= (sizeof(bitword)*8);
     bitword temporaryValue = arr[idx];
-    for (int step = 0; step < bitPosition; step++)
-    {
-        temporaryValue /=2;
-    }
 
-    return (int)(temporaryValue%2);
+    return ((temporaryValue>>bitPosition)&1);
 }
 
 //устанавливает значение idx-ого бита в newval (которое равно 0 или 1)
