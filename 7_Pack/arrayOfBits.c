@@ -44,70 +44,69 @@ void bitsetSet ( bitword * arr , int idx , int newval )
 //для left <= k < right есть единичный, и 0 иначе
 int bitsetAny ( const bitword * arr , int left , int right )
 {
-    for (int step = left; step < right; step++)
+    int leftInd = left / (sizeof(bitword)*8);
+    int rightInd = right / (sizeof(bitword)*8);
+    int leftBitInd = left % (sizeof(bitword)*8);
+    int rightBitInd = right % (sizeof(bitword)*8);
+
+    if (left == right)
     {
-        if(bitsetGet(arr, step))
+        return 0;
+    }
+    int value;
+    bitword value2 = arr[leftInd]>>(7-rightBitInd);
+    if (leftInd == rightInd)
+    {
+        
+        return 0;
+    }
+    
+    if (leftBitInd == 0)
+    {
+        value = 1;
+    }
+    else
+    {
+        value = pow(2, leftBitInd);
+    }
+    if (arr[leftInd] >= value)
+    {
+        return 1;
+    }
+    else
+    {
+        leftInd ++;
+    }
+    
+    if (rightBitInd == 0)
+    {
+        value = 1;
+    }
+    else
+    {
+        value = pow(2, rightBitInd);
+    }
+    if ((arr[rightBitInd] < value) && (arr[rightBitInd]> 0))
+    {
+        return 1;
+    }
+    else
+    {
+        rightInd --;
+    }
+
+    if ( leftInd > rightInd)
+    {
+        return 0;
+    }
+    while (leftInd<=rightInd)
+    {
+        if (arr[leftInd++]!= 0)
         {
             return 1;
         }
     }
     return 0;
-    // int step = left/(sizeof(bitword)*8);
-    // int limit = right / (sizeof(bitword)*8);
-    // int bitposLimit = right % (sizeof(bitword)*8);
-    // int bitposLeft = left % (sizeof(bitword)*8);
-    // if (bitposLimit != 0)
-    // {
-    //     bitword value = arr[limit];
-    //     if (value < pow(2, bitposLimit)&& value != 0)
-    //     {
-    //         return 1;
-    //     }
-    //     if (bitposLimit == 0)
-    //     {
-    //         value --;
-    //     }
-    //     else
-    //     {
-    //         value -= pow(2, bitposLimit);
-    //     }
-    //     if (value != 0 && value > pow(2,bitposLimit))
-    //     {
-    //         return 1;
-    //     }
-    // }
-    // limit--;
-
-    // bitword value = arr[step];
-    // if (value >= pow(2,bitposLeft))
-    // {
-    //     return 1;
-    // }
-    // if (bitposLeft == 0)
-    // {
-    //     value --;
-    // }
-    // else
-    // {
-    //     value -= pow(2, bitposLeft);
-    // }
-    // if (value != 0 && value < pow(2,bitposLeft))
-    // {
-    //     return 1;
-    // }
-    // step ++;
-    
-
-    // while (step <= limit)
-    //     {
-    //         if (arr[step] != 0)
-    //         {
-    //             return 1;
-    //         }
-    //         step++;
-    //     }
-    // return 0;
-    
 }
 
 int main()
