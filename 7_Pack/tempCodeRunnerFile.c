@@ -122,6 +122,11 @@ int main()
         if (typeOfOperation == initBitSetOfZero)
         {
             int amountOfBits;
+            if (bits != NULL)
+            {
+                free(bits);
+                bits = NULL;
+            }
             scanf("%d", &amountOfBits);
             if (amountOfBits % 8 == 0)
             {
@@ -131,14 +136,7 @@ int main()
             {
                 amountOfBits = amountOfBits / 8 + 1;
             }
-            if (bits != NULL)
-            {
-                bits = (bitword*)realloc(bits, (sizeof(bitword)*amountOfBits));
-            }
-            else
-            {
-                bits = (bitword*)malloc(sizeof(bitword)*amountOfBits);
-            }
+            bits = (bitword*)malloc(sizeof(bitword)*amountOfBits);
             for (int step = 0; step < amountOfBits; ++step)
                 {
                     bits[step] = 0;
@@ -171,6 +169,5 @@ int main()
             }
         }
     }
-    free(bits);
     return 0;
 }
