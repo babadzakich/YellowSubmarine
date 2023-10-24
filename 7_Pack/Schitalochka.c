@@ -53,10 +53,12 @@ int main()
     while (step2->next != step2)
     {  
         printf("%d\n", step2->value);
-        Node* temporaryNode = listStep(step2, step);
         deleteNode(step2);
+        Node* temporaryNode = listStep(step2, step);
         free(step2);
         step2 = temporaryNode;
     }
+    printf("%d", step2->value);
+    free(step2);
     return 0;
 }
