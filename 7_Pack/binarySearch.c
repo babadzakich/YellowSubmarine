@@ -5,7 +5,7 @@
 int binarySearch(int leftLimit, int rightLimit, int* array, int call)
 {
     int guess;
-    if (leftLimit >= rightLimit)
+    if (leftLimit + 1 < rightLimit)
     {
         guess = (leftLimit + rightLimit) / 2;
       
@@ -23,11 +23,11 @@ int binarySearch(int leftLimit, int rightLimit, int* array, int call)
         }
         if (array[guess] > call)
         {
-            return binarySearch(leftLimit, guess-1, array, call);
+            return binarySearch(leftLimit, guess, array, call);
         }
         else
         {
-            return binarySearch(guess+1, rightLimit, array, call);
+            return binarySearch(guess, rightLimit, array, call);
         }
     }
     return -1;
@@ -51,7 +51,7 @@ int main()
         int currentCall;
         scanf("%d", &currentCall);
         currentCall += searchedIndex;
-        searchedIndex = binarySearch(0, arrayLength, array, currentCall);
+        searchedIndex = binarySearch(0, arrayLength-1, array, currentCall);
         printf("%d\n", searchedIndex);
     }
     free(array);

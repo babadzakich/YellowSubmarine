@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Алина/Desktop/cProjects/six_pack_repository",
-      "program": "c:/Users/Алина/Desktop/cProjects/six_pack_repository/build/Debug/outDebug",
+      "cwd": "c:/Users/Алина/Desktop/NSU/1 Course/1 Semester/ImperativeProgramming/6_Pack",
+      "program": "c:/Users/Алина/Desktop/NSU/1 Course/1 Semester/ImperativeProgramming/6_Pack/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
