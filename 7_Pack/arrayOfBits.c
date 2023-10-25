@@ -7,15 +7,15 @@
 #define intervalHasOne 3
 
 //какой-нибудь целочисленный тип (желательно беззнаковый)
-typedef unsigned int bitword ;
+typedef unsigned char bitword ;
 //инициализирует массив битов длины num, устанавливая все его биты в ноль
-void bitsetZero ( bitword * arr , int num )
+void bitsetZero ( bitword ** arr , int num )
 {
-    arr = (bitword*)malloc(sizeof(bitword)*num);
-    for (int step = 0; step < num; ++step)
+    if (*arr != NULL)
     {
-        arr[step] = 0;
+        free(*arr);
     }
+    *arr = calloc(num, sizeof(bitword));
 }
 
 //возвращает значение idx-ого бита (0 или 1)
@@ -44,70 +44,52 @@ void bitsetSet ( bitword * arr , int idx , int newval )
 //для left <= k < right есть единичный, и 0 иначе
 int bitsetAny ( const bitword * arr , int left , int right )
 {
-    for (int step = left; step < right; step++)
+    int leftInd = left / (sizeof(bitword)*8);
+    int rightInd = right / (sizeof(bitword)*8);
+    int leftBitInd = left % (sizeof(bitword)*8);
+    int rightBitInd = right % (sizeof(bitword)*8);
+
+    if (leftInd == rightInd)
     {
-        if(bitsetGet(arr, step))
+        for (int step = leftBitInd; step < rightBitInd; step++)
+        {
+            if(bitsetGet(arr, step+(leftInd*8)))
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    for (int step = left; step < (leftInd+1)*8; step++)
+    {
+        if (bitsetGet(arr, step))
         {
             return 1;
         }
     }
+    for (int step = rightInd*8; step < right; step++)
+    {
+        if (bitsetGet(arr, step))
+        {
+            return 1;
+        }
+    }
+    
+    for(int step = leftInd+1; step < rightInd; step++)
+    {
+        if(arr[step] != 0)
+        {
+            return 1;
+        }
+    }
+    // while (leftInd < rightInd)
+    // {
+    //     if (arr[leftInd++]!= 0)
+    //     {
+    //         return 1;
+    //     }
+    // }
     return 0;
-    // int step = left/(sizeof(bitword)*8);
-    // int limit = right / (sizeof(bitword)*8);
-    // int bitposLimit = right % (sizeof(bitword)*8);
-    // int bitposLeft = left % (sizeof(bitword)*8);
-    // if (bitposLimit != 0)
-    // {
-    //     bitword value = arr[limit];
-    //     if (value < pow(2, bitposLimit)&& value != 0)
-    //     {
-    //         return 1;
-    //     }
-    //     if (bitposLimit == 0)
-    //     {
-    //         value --;
-    //     }
-    //     else
-    //     {
-    //         value -= pow(2, bitposLimit);
-    //     }
-    //     if (value != 0 && value > pow(2,bitposLimit))
-    //     {
-    //         return 1;
-    //     }
-    // }
-    // limit--;
-
-    // bitword value = arr[step];
-    // if (value >= pow(2,bitposLeft))
-    // {
-    //     return 1;
-    // }
-    // if (bitposLeft == 0)
-    // {
-    //     value --;
-    // }
-    // else
-    // {
-    //     value -= pow(2, bitposLeft);
-    // }
-    // if (value != 0 && value < pow(2,bitposLeft))
-    // {
-    //     return 1;
-    // }
-    // step ++;
-    
-
-    // while (step <= limit)
-    //     {
-    //         if (arr[step] != 0)
-    //         {
-    //             return 1;
-    //         }
-    //         step++;
-    //     }
-    // return 0;
-    
 }
 
 int main()
@@ -123,27 +105,9 @@ int main()
         {
             int amountOfBits;
             scanf("%d", &amountOfBits);
-            if (amountOfBits % 8 == 0)
-            {
-                amountOfBits = amountOfBits / 8;
-            }
-            else
-            {
-                amountOfBits = amountOfBits / 8 + 1;
-            }
-            if (bits != NULL)
-            {
-                bits = (bitword*)realloc(bits, (sizeof(bitword)*amountOfBits));
-            }
-            else
-            {
-                bits = (bitword*)malloc(sizeof(bitword)*amountOfBits);
-            }
-            for (int step = 0; step < amountOfBits; ++step)
-                {
-                    bits[step] = 0;
-                }
-            //bitsetZero(bits, amountOfBits);
+            amountOfBits = amountOfBits / 8 + 1;
+            
+            bitsetZero(&bits, amountOfBits);
         }
         else if (typeOfOperation == getBitValue)
         {
