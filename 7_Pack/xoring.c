@@ -10,13 +10,13 @@ int main()
     {
         double delimeter, divider;
         uint64_t bitWord;
-        scanf("%lf/%lf xor %11x", &delimeter, &divider, &bitWord);
+        scanf("%lf/%lf xor %llx", &delimeter, &divider, &bitWord);
         //printf("%lf %lf %11x\n", delimeter, divider, bitWord);
         double divisionResult = delimeter/divider;
         unsigned long long* bitDivisionResult = (unsigned long long*)&divisionResult;
         unsigned long long bitXorResult = (*bitDivisionResult) ^ bitWord;
         double xorResult = *((double*)&bitXorResult);
-        printf("%ld\n", xorResult);
+        printf("%0.15g\n", xorResult);
     }
     return 0;
 }
