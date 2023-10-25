@@ -4,33 +4,31 @@
 
 int binarySearch(int leftLimit, int rightLimit, int* array, int call)
 {
-    int guess;
-    if (leftLimit + 1 < rightLimit)
+    if (leftLimit > rightLimit)
     {
-        guess = (leftLimit + rightLimit) / 2;
-      
-        int result;
-        if (array[guess] == call)
-        {
-            result = binarySearch(guess, rightLimit, array, call);
-            if (result > guess)
-            {
-                return result;
-            }
-            else{
-                return guess;
-            }
-        }
-        if (array[guess] > call)
-        {
-            return binarySearch(leftLimit, guess, array, call);
-        }
-        else
-        {
-            return binarySearch(guess, rightLimit, array, call);
-        }
+        return -1;
     }
-    return -1;
+
+    int guess = (leftLimit + rightLimit)/2;
+
+    if ( array[guess] > call)
+    {
+        return binarySearch(leftLimit, guess-1, array, call);
+    }
+    else if (array[guess] < call)
+    {
+        return binarySearch(guess+1, rightLimit, array, call);
+    }
+    else
+    {
+        int result = guess;
+        while(result != -1)
+        {
+            guess = result;
+            result = binarySearch(result+1, rightLimit, array, call);
+        }
+        return guess;
+    }
 }
 
 int main()
