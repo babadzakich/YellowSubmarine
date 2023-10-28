@@ -1,38 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-void binarySearch(int leftLimit, int rightLimit, int* array, int search)
+int binarySearch(int leftLimit, int rightLimit, int* array, int search)
 {  
-    while (leftLimit < rightLimit)
+    int guess = (leftLimit + rightLimit)/2;
+    if (leftLimit >= rightLimit)
     {
-        int guess = (leftLimit + rightLimit) / 2;
-        if (array[guess] == search || array[guess] == search + 1)
-        {
-            if (array[guess] == search)
-            {
-                printf("%d 0\n", guess);
-                return;
-            }
-            else
-            {
-                binarySearch(leftLimit, guess, array, search-1);
-                printf("%d 1\n", guess);
-                return;
-            }
-        }
-        else if (array[guess] < search)
-        {
-            leftLimit = guess + 1;
-        }
-        else
-        {
-            rightLimit = guess - 1;
-        }
-        
-        
+        return leftLimit;
     }
-       
-}
+    
+    if(search < array[guess] && (abs(array[guess] - search) >= abs(array[guess-1] - search)))
+    { 
+        return binarySearch(leftLimit, guess, array, search); 
+    }
+    else if(search > array[guess] && (abs(array[guess] - search) >= abs(array[guess+1]-search)))
+    { 
+        return binarySearch(guess+1, rightLimit, array, search); 
+    }
+    else
+    { 
+        return guess; 
+    } 
+} 
+    
 
 int main()
 {
@@ -50,7 +41,9 @@ int main()
     {
         int value;
         scanf("%d", &value);
-        binarySearch(0, amountOfElements-1, array, value);
+        int index = binarySearch(0, amountOfElements-1, array, value);
+        printf("%d %d\n", index, abs(value - array[index]));
     }
+    free(array);
     return 0;
 }
