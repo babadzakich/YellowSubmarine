@@ -21,14 +21,15 @@ double * initList ()
 //принимает указатель на value голове списка (вспом. узел)
 void freeList ( double * head )
 {
-    Node* step = head;
-    while (step != head)
+    Node* start = (Node*)((void*)head - offsetof(Node, value));
+    Node* step = start->next;
+    while (step != start)
     {
         Node *temp = step->next;
         free(step);
         step = temp;
     }
-    free(head);
+    free(start);
     
 }
 //определяет следующий элемент после заданного
@@ -46,8 +47,6 @@ void erase ( double * what );
 
 int main()
 {
-    Node nde;
-    double* ndd = &nde.value;
-    Node currentNode = *((Node*)ndd - offsetof(Node, value));
+    
     return 0;
 }
