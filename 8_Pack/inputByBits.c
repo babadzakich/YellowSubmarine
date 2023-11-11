@@ -19,38 +19,50 @@ int main()
         {
             uint8_t letter;
             fread(&letter, sizeof(uint8_t), 1, in);
+            wordsArray[word][step] = letter;
         }
     }
     int32_t lengthOfText;
     fread(&lengthOfText, sizeof(int32_t), 1, in);
     int16_t bitwordArray[8];
-    
+    uint8_t result;
+    int bitword = 0;
+
     for (int step = 0; step < lengthOfText; step++)
     {
-        uint8_t result = 0;
+        
         int16_t word;
         fread(&word, sizeof(int16_t), 1, in);
         int32_t length = _msize(wordsArray[word])/sizeof(int16_t);
         for (int step2 = 0; step2 < length; step2++)
         {
-            if (step2 != 0 && step2 % 8 == 0)
+            bitwordArray[bitword++] = wordsArray[word][step2];
+            if (bitword == 8)
             {
+                uint8_t result = 0;
+                for (int bitworder = 7; bitworder>=0; bitworder--)
+                {
+                    result <<= 1;
+                    result += bitwordArray[bitworder];
+                }
                 fwrite(&result, sizeof(uint8_t), 1, out);
-                result = 0;
+                bitword = 0;
             }
-            else
-            {
-                result <<= 1;
-                result += wordsArray[word][step2];
-            }
+            
         }
     }
 
-    if (result != 0)
+    if (bitword != 0)
     {
+        uint8_t result = 0;
+        for (int bitworder = bitword-1; bitworder>=0; bitworder--)
+        {
+            result <<= 1;
+            result += bitwordArray[bitworder];
+        }
         fwrite(&result, sizeof(uint8_t), 1, out);
     }
-    for (int step = 0; step < amountOfWords; step++)
+    for (int step = 0; step < amountOfWords-1; step++)
     {
         free(wordsArray[step]);
     }

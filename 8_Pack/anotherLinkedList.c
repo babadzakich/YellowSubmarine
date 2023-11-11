@@ -81,7 +81,6 @@ void erase ( double * what )
     Node *currentNode = (Node*)((void*)what - offsetof(Node,value));
     currentNode->next->prev = currentNode->prev;
     currentNode->prev->next = currentNode->next;
-    double* value = &currentNode->value;
     free(currentNode);
 }
 
@@ -113,7 +112,7 @@ int main()
                 int nodePosition;
                 double newValue;
                 scanf("%d %lf", &nodePosition, &newValue);
-                array[amountOfNodes++] = addBefore(array[nodePosition], newValue);
+                array[amountOfNodes++] = addAfter(array[nodePosition], newValue);
             }
             if (typeOfOperation == delition)
             {
@@ -125,10 +124,12 @@ int main()
             
         }
         printf("===\n");
-        for(double* step = getNext(array[-1]); getNext(step)!= array[-1]; step = getNext(step))
+        for(Node* step = (Node*)((void*)getNext(array[-1])-offsetof(Node, value)); &step->value != array[-1]; step = step->next)
         {
-            printf("%0.3lf\n", *step);
+            printf("%0.3lf\n", step->value);
         }
+        printf("===\n");
+        freeList(array[-1]);
     }
     return 0;
 }
