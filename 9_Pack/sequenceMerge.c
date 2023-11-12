@@ -7,8 +7,29 @@
 int merge ( const int *a , int ak , const int *b , int bk , int * res )
 {
     int32_t resultLength = ak+bk;
+    int32_t resultStep, aStep, bStep;
+    resultStep = aStep = bStep = 0;
     
-    
+    while (aStep < ak && bStep < bk)
+    {
+        if (a[aStep] > b[bStep])
+        {
+            res[resultStep++] = b[bStep++];
+        }
+        else
+        {
+            res[resultStep++] = a[aStep++];
+        }
+    }
+
+    while (aStep < ak)
+    {
+        res[resultStep++] = a[aStep++];
+    }
+    while (bStep < bk)
+    {
+        res[resultStep++] = b[bStep++];
+    }
     
     return resultLength;
 }
