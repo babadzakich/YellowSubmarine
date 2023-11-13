@@ -7,32 +7,45 @@
 // the subarray a[k..n-1] must have all elements >= pivot
 int partition (int *a , int n , int pivot )
 {
-    int left = 0, right = n-1;
-    int leftPivot = 0, rightPivot = 0;
-    do 
+    int lesserAmount, equalAmount, moreAmount;
+    lesserAmount = equalAmount = moreAmount = 0;
+    int32_t* lesserSequence = (int32_t*)malloc(sizeof(int32_t)*n);
+    int32_t* equalSequence = (int32_t*)malloc(sizeof(int32_t)*n);
+    int32_t* moreSequence = (int32_t*)malloc(sizeof(int32_t)*n);
+    for(int step = 0; step < n; step++)
     {
-        while (a[left] < pivot)
+        if (a[step]<pivot)
         {
-            left++;
+            lesserSequence[lesserAmount++] = a[step];
         }
-        while (a[right] > pivot)
+        else if(a[step] == pivot)
         {
-            right--;
+            equalSequence[equalAmount++] = a[step];
         }
-        if (left <= right)
+        else
         {
-            if (a[left] > a[right])
-            {
-                int temporary = a[left];
-                a[left] = a[right];
-                a[right] = temporary;   
-            }
-            left++;
-            right--;
+            moreSequence[moreAmount++] = a[step];
         }
-        
-    }while (left <= right);
-    return left;
+    }
+    for(int step = 0; step < n; step++)
+    {
+        if (step < lesserAmount)
+        {
+            a[step] = lesserSequence[step];
+        }
+        else if (step < (lesserAmount + equalAmount) && step >= lesserAmount)
+        {
+            a[step] = equalSequence[step - lesserAmount];
+        }
+        else
+        {
+            a[step] = moreSequence[step - lesserAmount-equalAmount];
+        }
+    }
+    free(lesserSequence);
+    free(equalSequence);
+    free(moreSequence);
+    return lesserAmount + equalAmount / 2;
 }
 
 int main()
