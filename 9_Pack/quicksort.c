@@ -12,7 +12,7 @@ int randomNum(const int left, const int right)
 void quicksort(int* array, int leftStart, int rightStart)
 {
     int left = leftStart, right = rightStart-1;
-    int pivot = array[(leftStart+(rightStart-leftStart)/2)];
+    int pivot = array[(leftStart+rightStart)/2];
     do 
     {
         while (array[left] < pivot)
