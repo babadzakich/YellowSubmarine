@@ -7,45 +7,71 @@
 // the subarray a[k..n-1] must have all elements >= pivot
 int partition (int *a , int n , int pivot )
 {
-    int lesserAmount, equalAmount, moreAmount;
-    lesserAmount = equalAmount = moreAmount = 0;
-    int32_t* lesserSequence = (int32_t*)malloc(sizeof(int32_t)*n);
-    int32_t* equalSequence = (int32_t*)malloc(sizeof(int32_t)*n);
-    int32_t* moreSequence = (int32_t*)malloc(sizeof(int32_t)*n);
-    for(int step = 0; step < n; step++)
+    int leftPivot, rightPivot;
+    leftPivot = rightPivot = 0;
+    int left = 0, right = n-1;
+    while (left < right)
     {
-        if (a[step]<pivot)
+        while (a[left] < pivot)
         {
-            lesserSequence[lesserAmount++] = a[step];
+            left++;
         }
-        else if(a[step] == pivot)
+        while (a[right] > pivot)
         {
-            equalSequence[equalAmount++] = a[step];
+            right--;
         }
-        else
+        if (left < right)
         {
-            moreSequence[moreAmount++] = a[step];
+            if (a[left] == pivot && rightPivot - leftPivot > 1)
+            {
+                left++;
+                leftPivot++;
+            }
+            else if(a[right] == pivot && leftPivot - rightPivot > 1)
+            {
+                right--;
+                rightPivot++;
+            }
+            else if ( a[left] == pivot && a[right] == pivot)
+            {
+                if (rightPivot - leftPivot > 1)
+                {
+                    left++;
+                    leftPivot++;
+                }
+                else if (leftPivot - rightPivot > 1)
+                {
+                    right--;
+                    rightPivot++;
+                }
+                else
+                {
+                    int temporary = a[left];
+                    a[left] = a[right];
+                    a[right] = temporary;
+                    left++;
+                    right--;
+                }
+            }
+            else if((a[left] == pivot && leftPivot - rightPivot > 1) || (a[right] == pivot && rightPivot - leftPivot > 1))
+            {
+                int temporary = a[left];
+                a[left] = a[right];
+                a[right] = temporary;
+                left++;
+                right--; 
+            }
+            else
+            {
+                int temporary = a[left];
+                a[left] = a[right];
+                a[right] = temporary;
+                left++;
+                right--; 
+            }
         }
     }
-    for(int step = 0; step < n; step++)
-    {
-        if (step < lesserAmount)
-        {
-            a[step] = lesserSequence[step];
-        }
-        else if (step < (lesserAmount + equalAmount) && step >= lesserAmount)
-        {
-            a[step] = equalSequence[step - lesserAmount];
-        }
-        else
-        {
-            a[step] = moreSequence[step - lesserAmount-equalAmount];
-        }
-    }
-    free(lesserSequence);
-    free(equalSequence);
-    free(moreSequence);
-    return lesserAmount + equalAmount / 2;
+    return left;
 }
 
 int main()
