@@ -70,5 +70,7 @@ int main()
     {
         fwrite(&sequence[step], sizeof(int32_t), 1, out);
     }
+    fclose(in);
+    fclose(out);
     return 0;
 }

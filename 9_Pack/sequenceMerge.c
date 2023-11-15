@@ -42,21 +42,15 @@ int main()
 
     int32_t firstSequenceLength;
     fread(&firstSequenceLength, sizeof(int32_t), 1, in);
-    int32_t firstSequence[firstSequenceLength];   
+    int32_t* firstSequence = (int32_t*)malloc(sizeof(int32_t) *firstSequenceLength);   
 
     int32_t secondSequenceLength; 
     fread(&secondSequenceLength, sizeof(int32_t), 1, in);
-    int32_t secondSequence[secondSequenceLength];
+    int32_t* secondSequence = (int32_t*)malloc(sizeof(int32_t) * secondSequenceLength);
 
-    for (int step = 0; step < firstSequenceLength;step++)
-    {
-        fread(&firstSequence[step], sizeof(int32_t), 1, in);
-    }
+    fread(firstSequence, sizeof(int32_t), firstSequenceLength, in);
 
-    for (int step = 0; step < secondSequenceLength;step++)
-    {
-        fread(&secondSequence[step], sizeof(int32_t), 1, in);
-    }
+    fread(secondSequence, sizeof(int32_t), secondSequenceLength, in);
 
     int32_t *mergedSequence = (int32_t*)malloc(sizeof(int32_t)*(secondSequenceLength+firstSequenceLength));
 
@@ -67,6 +61,10 @@ int main()
     {
         fwrite(&mergedSequence[step], sizeof(int32_t), 1, out);
     }
-
+    free(firstSequence);
+    free(secondSequence);
+    free(mergedSequence);
+    fclose(in);
+    fclose(out);
     return 0;
 }
