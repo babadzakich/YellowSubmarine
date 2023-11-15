@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <conio.h>
+#include <time.h>
 
 
 int randomNum(const int left, const int right) 
@@ -11,8 +12,13 @@ int randomNum(const int left, const int right)
 
 void quicksort(int* array, int leftStart, int rightStart)
 {
+    if (leftStart > rightStart)
+    {
+        return;
+    }
     int left = leftStart, right = rightStart;
-    int pivot = array[randomNum(leftStart,rightStart-1)];
+    srand(time(NULL));
+    int pivot = array[rand() % (right - left + 1) + left];
 
     while (left <= right)
     {
@@ -26,32 +32,27 @@ void quicksort(int* array, int leftStart, int rightStart)
         }
         if (left <= right)
         {
-            if (array[left] > array[right])
-            {
-                int temporary = array[left];
-                array[left] = array[right];
-                array[right] = temporary; 
-                  
-            }  
+            int temporary = array[left];
+            array[left] = array[right];
+            array[right] = temporary;   
             left++;
-            if (right > 0)
-            {
-                right--;
-            }
+            right--;
         }
     }
-    if (left < rightStart)
-    {
-        quicksort(array, left, rightStart);
-    }
-    if (right > leftStart)
-    {
-        quicksort(array, leftStart, right);
-    }
+    quicksort(array, leftStart, right);
+    quicksort(array, left, rightStart);
+    
 }
 
 int main()
 {
+    // int a[] = {1,2,2,2,1};
+    // quicksort(a,0,4);
+    // for (int i = 0; i < 5; i++)
+    // {
+    //     printf("%d ",a[i]);
+    // }
+    
     FILE *in = fopen("input.txt", "rb");
     FILE *out = fopen("output.txt", "wb");
 
