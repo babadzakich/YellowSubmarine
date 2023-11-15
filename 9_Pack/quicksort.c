@@ -11,9 +11,10 @@ int randomNum(const int left, const int right)
 
 void quicksort(int* array, int leftStart, int rightStart)
 {
-    int left = leftStart, right = rightStart-1;
-    int pivot = array[(leftStart+rightStart)/2];
-    do 
+    int left = leftStart, right = rightStart;
+    int pivot = array[randomNum(leftStart,rightStart-1)];
+
+    while (left <= right)
     {
         while (array[left] < pivot)
         {
@@ -29,15 +30,16 @@ void quicksort(int* array, int leftStart, int rightStart)
             {
                 int temporary = array[left];
                 array[left] = array[right];
-                array[right] = temporary;   
+                array[right] = temporary; 
+                  
             }  
+            left++;
+            if (right > 0)
+            {
+                right--;
+            }
         }
-        left++;
-        if(right>0)
-        {
-            right--;
-        }
-    }while (left <= right);
+    }
     if (left < rightStart)
     {
         quicksort(array, left, rightStart);
@@ -55,15 +57,17 @@ int main()
 
     int32_t arrayLength, maxNum = 0;
     fread(&arrayLength, sizeof(int), 1, in);
-    int32_t array[arrayLength];
-    for (int step = 0; step < arrayLength; step++)
-    {
-        fread(&array[step], sizeof(int), 1, in);
-    }
-    quicksort(array, 0, arrayLength);
-    for (int step = 0; step < arrayLength; step++)
-    {
-        fwrite(&array[step], sizeof(int), 1, out);
-    }
+
+    int32_t* array = (int32_t*)malloc(sizeof(int32_t) * arrayLength);
+
+    fread(array, sizeof(int32_t), arrayLength, in);
+    
+    quicksort(array, 0, arrayLength-1);
+    
+    fwrite(array, sizeof(int), arrayLength, out);
+    
+    free(array);
+    fclose(in);
+    fclose(out);
     return 0;
 }
