@@ -7,71 +7,48 @@
 // the subarray a[k..n-1] must have all elements >= pivot
 int partition (int *a , int n , int pivot )
 {
-    int leftPivot, rightPivot;
-    leftPivot = rightPivot = 0;
-    int left = 0, right = n-1;
-    while (left < right)
+    int leftStep = 0, rightStep = n-1;
+    int leftPivot = 0, rightPivot = 0;
+    while (leftStep <= rightStep)
     {
-        while (a[left] < pivot)
+        while (a[leftStep] < pivot)
         {
-            left++;
+            leftStep++;
         }
-        while (a[right] > pivot)
+        while (a[rightStep] > pivot)
         {
-            right--;
+            rightStep--;
         }
-        if (left < right)
+        if (leftStep <= rightStep)
         {
-            if (a[left] == pivot && rightPivot - leftPivot > 1)
-            {
-                left++;
-                leftPivot++;
-            }
-            else if(a[right] == pivot && leftPivot - rightPivot > 1)
-            {
-                right--;
-                rightPivot++;
-            }
-            else if ( a[left] == pivot && a[right] == pivot)
-            {
-                if (rightPivot - leftPivot > 1)
-                {
-                    left++;
-                    leftPivot++;
-                }
-                else if (leftPivot - rightPivot > 1)
-                {
-                    right--;
-                    rightPivot++;
-                }
-                else
-                {
-                    int temporary = a[left];
-                    a[left] = a[right];
-                    a[right] = temporary;
-                    left++;
-                    right--;
-                }
-            }
-            else if((a[left] == pivot && leftPivot - rightPivot > 1) || (a[right] == pivot && rightPivot - leftPivot > 1))
-            {
-                int temporary = a[left];
-                a[left] = a[right];
-                a[right] = temporary;
-                left++;
-                right--; 
-            }
-            else
-            {
-                int temporary = a[left];
-                a[left] = a[right];
-                a[right] = temporary;
-                left++;
-                right--; 
-            }
+            int temporary = a[leftStep];
+            a[leftStep] = a[rightStep];
+            a[rightStep] = temporary;   
+            leftStep++;
+            rightStep--;
         }
     }
-    return left;
+    int leftCounter = 0, pivotCounter = 0;
+    for(int step = 0; step < n; step++)
+    {
+        if (a[step] < pivot)
+        {
+            leftCounter++;
+        }
+        if (a[step] == pivot)
+        {
+            pivotCounter++;
+        }
+    }
+    if (pivotCounter % 2 == 1)
+    {
+        pivotCounter = pivotCounter/2+1;
+    }
+    else
+    {
+        pivotCounter/=2;
+    }
+    return leftCounter + pivotCounter;
 }
 
 int main()
@@ -86,16 +63,10 @@ int main()
     fread(&pivotElement, sizeof(int32_t), 1, in);
 
     int32_t sequence[sequenceLength];
-    for( int step = 0; step < sequenceLength; step++)
-    {
-        fread(&sequence[step], sizeof(int32_t), 1, in);
-    }
+    fread(sequence, sizeof(int32_t), sequenceLength, in);
     int32_t partitionAmount = partition(sequence, sequenceLength, pivotElement);
     fwrite(&partitionAmount, sizeof(int32_t), 1, out);
-    for (int step = 0; step < sequenceLength; step++)
-    {
-        fwrite(&sequence[step], sizeof(int32_t), 1, out);
-    }
+    fwrite(sequence, sizeof(int32_t), sequenceLength, out);
     fclose(in);
     fclose(out);
     return 0;
