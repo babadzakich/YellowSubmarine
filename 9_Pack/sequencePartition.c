@@ -7,48 +7,40 @@
 // the subarray a[k..n-1] must have all elements >= pivot
 int partition (int *a , int n , int pivot )
 {
-    int leftStep = 0, rightStep = n-1;
-    int leftPivot = 0, rightPivot = 0;
-    while (leftStep <= rightStep)
-    {
-        while (a[leftStep] < pivot)
-        {
-            leftStep++;
-        }
-        while (a[rightStep] > pivot)
-        {
-            rightStep--;
-        }
-        if (leftStep <= rightStep)
-        {
-            int temporary = a[leftStep];
-            a[leftStep] = a[rightStep];
-            a[rightStep] = temporary;   
-            leftStep++;
-            rightStep--;
-        }
-    }
-    int leftCounter = 0, pivotCounter = 0;
-    for(int step = 0; step < n; step++)
+    int left = 0, right = n-1;
+    int flag = 0; // flag shows whether we added last occured pivot to the left
+    int* resultArray = (int*)malloc(sizeof(int)*n);
+    for (int step = 0; step < n; step++)
     {
         if (a[step] < pivot)
         {
-            leftCounter++;
+            resultArray[left++] = a[step];
         }
-        if (a[step] == pivot)
+        else if(a[step] > pivot)
         {
-            pivotCounter++;
+            resultArray[right--] = a[step];
         }
+        else
+        {
+            if(flag)
+            {
+                resultArray[right--] = a[step];
+                flag = 0;
+            }
+            else
+            {
+                resultArray[left++] = a[step];
+                flag = 1;
+            }
+        }
+        
     }
-    if (pivotCounter % 2 == 1)
+    for (int step = 0; step < n; step++)
     {
-        pivotCounter = pivotCounter/2+1;
+        a[step] = resultArray[step];
     }
-    else
-    {
-        pivotCounter/=2;
-    }
-    return leftCounter + pivotCounter;
+    free(resultArray);
+    return left;
 }
 
 int main()
@@ -62,11 +54,12 @@ int main()
     int32_t pivotElement;
     fread(&pivotElement, sizeof(int32_t), 1, in);
 
-    int32_t sequence[sequenceLength];
+    int32_t* sequence = (int32_t*)malloc(sizeof(int32_t)*sequenceLength);
     fread(sequence, sizeof(int32_t), sequenceLength, in);
     int32_t partitionAmount = partition(sequence, sequenceLength, pivotElement);
     fwrite(&partitionAmount, sizeof(int32_t), 1, out);
     fwrite(sequence, sizeof(int32_t), sequenceLength, out);
+    free(sequence);
     fclose(in);
     fclose(out);
     return 0;
