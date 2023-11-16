@@ -57,10 +57,8 @@ int main()
     int32_t mergedSequenceLength = merge(firstSequence, firstSequenceLength, secondSequence, secondSequenceLength, mergedSequence);
     //qsort(mergedSequence, mergedSequenceLength, sizeof(int32_t),compare);
 
-    for (int step = 0; step < mergedSequenceLength; step++)
-    {
-        fwrite(&mergedSequence[step], sizeof(int32_t), 1, out);
-    }
+    fwrite(mergedSequence, sizeof(int32_t), mergedSequenceLength, out);
+    
     free(firstSequence);
     free(secondSequence);
     free(mergedSequence);
