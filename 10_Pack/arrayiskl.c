@@ -12,13 +12,12 @@ void duplicateDeletion(int* array, int* size)
     int step2=0, uniqueElements = 1;
     for (int step = 1; step < *size; step++)
     {
-        if (array[step] > tempArray[step2])
+        if (array[step] != array[step - 1])
         {
-            tempArray[++step2] = array[step];
-            uniqueElements++;
+            tempArray[uniqueElements++] = array[step];
         }
     }
-    array = realloc(array, sizeof(int)*uniqueElements+1);
+    array = realloc(array, sizeof(int)*uniqueElements);
     for (int step = 0; step < uniqueElements; step++)
     {
         array[step] = tempArray[step];
@@ -38,7 +37,7 @@ int main()
         scanf("%d", &firstArray[step]);
     }
     qsort(firstArray, firstArrayLength, sizeof(int), comparasion);
-    //duplicateDeletion(firstArray, &firstArrayLength);
+    duplicateDeletion(firstArray, &firstArrayLength);
 
     
     scanf("%d", &secondArrayLength);
@@ -48,13 +47,12 @@ int main()
         scanf("%d", &secondArray[step]);
     }
     qsort(secondArray, secondArrayLength, sizeof(int), comparasion);
-    //duplicateDeletion(secondArray, &secondArrayLength);
+    duplicateDeletion(secondArray, &secondArrayLength);
 
 
     int firstStep = 0;
     int secondStep = 0;
     int thirdLen = 0;
-    int thirdCapacity = 1;
     int* thirdArray = (int*)malloc(sizeof(int) * (firstArrayLength + secondArrayLength));
 
     while(firstStep < firstArrayLength && secondStep < secondArrayLength)
@@ -77,21 +75,12 @@ int main()
     {
         thirdArray[thirdLen++] = firstArray[firstStep++];
     }
-    int* resArray = (int*)malloc(sizeof(int)*thirdLen);
-    int resLen = 0;
-    for (int step = 0; step < thirdLen-1; step++)
+    //duplicateDeletion(thirdArray, &thirdLen);
+    printf("%d\n", thirdLen);
+    for(int step = 0; step < thirdLen; step++)
     {
-        if(thirdArray[step] != thirdArray[step+1])
-        {
-            resArray[resLen++] = thirdArray[step];
-        }
+        printf("%d ", thirdArray[step]);
     }
-    printf("%d\n", resLen);
-    for(int step = 0; step < resLen; step++)
-    {
-        printf("%d ", resArray[step]);
-    }
-    free(resArray);
     free(firstArray);
     free(secondArray);
     free(thirdArray);
