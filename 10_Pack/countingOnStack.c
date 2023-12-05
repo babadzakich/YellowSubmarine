@@ -90,4 +90,5 @@ int main()
     }
     printf("%lld", stack.array[0]);
     free(stack.array);
+    return 0;
 }
