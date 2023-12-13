@@ -1,56 +1,45 @@
 #include <stdio.h>
-#include <time.h>
-#define SIZE 100000000
+#include <stdio.h>
+#include <stdint.h>
 
+uint64_t a, b, c, M;
 
- 
-
-struct Node 
+uint64_t hash(uint64_t state)
 {
-  long num;
-  struct Node *next;
-};
+  return (state * state * a + state * b + c) % M;
+}
 
-static struct Node array [SIZE];
-int main () {
-  long i, time1, time2, loopnode;
-  struct Node *ptr1, *ptr2;
-
-  for (i=0; i<SIZE-1; i++) {
-    array [i].num = i+1;
-    array [i].next = &array[i+1];
+int main()
+{
+  scanf("%llu", &M);
+  scanf("%llu %llu %llu", &a, &b, &c);
+  uint64_t rabbitState, turtleState;
+  rabbitState = turtleState = 1;
+  rabbitState = hash(hash(rabbitState));
+  turtleState = hash(turtleState);
+  int counter = 0;
+  while(rabbitState != turtleState)
+  {
+    rabbitState = hash(hash(rabbitState));
+    turtleState = hash(turtleState);
   }
-  array [SIZE-1].num = SIZE-1;
-  array [SIZE-1].next = &array[1];
-
-  time1 = clock();
-
-  ptr1 = &array[1];
-  ptr2 = &array[2];
-
-  while ((ptr2 != NULL) && 
-        (ptr2->next != NULL) && 
-        (ptr1 != ptr2)) {
-    ptr1 = ptr1->next;
-    ptr2 = ptr2->next->next;
+  rabbitState = 1;
+  int leftCounter = 0;
+  while(turtleState != rabbitState)
+  {
+    turtleState = hash(turtleState);
+    rabbitState = hash(rabbitState);
+    leftCounter++;
   }
-    
-  if (ptr1 != ptr2)
-    loopnode = 0;
-  else {
-    ptr1 = &array[0];
-    while (ptr1 != ptr2) {
-      ptr1 = ptr1->next;   
-      ptr2 = ptr2->next;
-    }
-    loopnode = ptr1->num;
+  counter = leftCounter + 1;
+  //turtleState = hash(turtleState);
+  rabbitState = hash(turtleState);
+  while(turtleState != rabbitState)
+  {
+    //turtleState = hash(turtleState);
+    rabbitState = hash(rabbitState);
+    counter ++;
   }
-   
-  time2 = clock();
-  
-  printf ("Loopnode is %ld, time is %ld\n", 
-          loopnode, time2-time1);
-  
+  printf("%d %d",leftCounter, counter);
   return 0;
-
 }
