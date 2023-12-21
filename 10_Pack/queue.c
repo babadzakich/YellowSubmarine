@@ -60,7 +60,6 @@ void stackCopy(Stack* departure, Stack* destination)
     while(departure->top != 0)
     {
         enqueue(destination, (departure->array[--departure->top].value));
-
     }
 }
 
@@ -80,9 +79,14 @@ int max(Stack* in, Stack* out)
     {
         return (out->array[out->top-1].max);
     }
-    else if(out->top == 0)
+    else if(out->capacity == 0)
     {
         return (in->array[in->top-1].max);
+    }
+    else if (out->top == 0)
+    {
+        stackCopy(in, out);
+        return max(in, out);
     }
     else
     {
@@ -96,9 +100,14 @@ int min(Stack* in, Stack* out)
     {
         return out->array[out->top-1].min;
     }
-    else if(out->top == 0)
+    else if(out->capacity == 0)
     {
         return in->array[in->top-1].min;
+    }
+    else if(out->top == 0)
+    {
+        stackCopy(in, out);
+        return min(in, out);
     }
     else
     {
