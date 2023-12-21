@@ -85,7 +85,26 @@ Root* rebalance(Root* root)
     }
     return root;
 }
-
+void remove(Root* root, int value)
+{
+    if(root == NULL)
+    {
+        printf("miss\n");
+        return;
+    }
+    if(root->value > value)
+    {
+        delete(root->left, value);
+    }
+    else if (root->value < value)
+    {
+        delete(root->right, value);
+    }
+    else
+    {
+        
+    }
+}
 Root* add(Root* root, int value)
 {
     if(root == NULL)
