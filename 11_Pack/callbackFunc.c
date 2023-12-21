@@ -48,9 +48,7 @@ void linkedListForEach(void * ctx , callback func , Node* head)
     while (step != head)
     {
         func(ctx, &step->value);
-        Node* temp = step->next;
-        free(step);
-        step = temp;
+        step = step->next;
     }
     printf("%d",*(int*)ctx);
     
@@ -78,6 +76,13 @@ int main()
     arrayForeach(counter, summaryF, array, amountOfNumbers);
     *((int*)counter) = 0;
     linkedListForEach(counter, summaryF, head);
+    Node* step = head->next;
+    while(step != head)
+    {
+        Node* temp = step->next;
+        free(step);
+        step = temp;
+    }
     free(array);
     free(head);
     free(counter);

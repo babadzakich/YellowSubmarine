@@ -1,32 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef int (* callback )( const void * ,const void*, const int);
+typedef int (* callback )( const void * ,const void*);
 
-int comparator(void const* guess, void const* call, int const flag)
-{
-    if (flag==0)
-    {
-            if (*(long long*)guess < *(long long*)call)
-        {
-            return -1;
-        }
-        else if (*(long long*)guess > *(long long*)call)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else
-    {
-        char *number1 = *(char **)guess;
-        char *number2 = (char *)call;
-        return strcmp(number1, number2);
-    }
-}
 int stringsFunc(const void* guess, const void* call)
 {
     char *number1 = *(char **)guess;
@@ -34,7 +10,7 @@ int stringsFunc(const void* guess, const void* call)
     return strcmp(number1, number2);
 }
 
-int lower_boundary(void* array, int length, void* call,int flag, int size, callback func)
+int lower_boundary(void* array, int length, void* call, int size, callback func)
 {
     int leftLimit = 0, rightLimit = length - 1;
     while(leftLimit < rightLimit)
@@ -42,7 +18,7 @@ int lower_boundary(void* array, int length, void* call,int flag, int size, callb
         int guess = (leftLimit + rightLimit)/2;
         void* guessPtr = (void*)(((char*)array) + guess * size);
         
-        if (func(guessPtr, call, flag) >= 0)
+        if (func(guessPtr, call) >= 0)
         {   
             rightLimit = guess;
         }
@@ -53,13 +29,8 @@ int lower_boundary(void* array, int length, void* call,int flag, int size, callb
     }
 
     void *guessPtr = (void *)(((char*)array) + leftLimit*size);
-    while (func(guessPtr, call, flag) < 0)
+    if (leftLimit < length && func(guessPtr, call) < 0)
     {
-        if (leftLimit == length)
-        {
-            break;
-        }
-        guessPtr = (void *)(((char*)array) + leftLimit*size);
         leftLimit++;
     }
     return leftLimit;
@@ -120,7 +91,7 @@ int main()
     {
         long long current;
         scanf("%lld", &current);
-        printf("%d\n", lower_boundary(numbersArray, amountOfNumbers, &current, flag, sizeof(long long), comparator));
+        printf("%d\n", lower_boundary(numbersArray, amountOfNumbers, &current, sizeof(long long), compareNum));
     }
 
     flag = 1;
@@ -130,7 +101,7 @@ int main()
     {
         char current[32];
         scanf("%s", current);
-        printf("%d\n", lower_boundary(stringsArray, amountOfLines, current, flag, sizeof(char*), comparator));
+        printf("%d\n", lower_boundary(stringsArray, amountOfLines, current, sizeof(char*), stringsFunc));
     }
 
     free(numbersArray);
