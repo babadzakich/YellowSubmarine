@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include<stdlib.h>
+#include<string.h>
+#define minimal 1000000001
 
 typedef struct Tree
 {
@@ -85,33 +87,77 @@ Root* rebalance(Root* root)
     }
     return root;
 }
-void remove(Root* root, int value)
+
+void lower_bound(Root* root, int value, int* minimum)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    if (root->value >= value)
+    {
+        if(root->value < *minimum)
+        {
+            *minimum = root->value;
+        }
+        lower_bound(root->left, value, minimum);
+    }
+    else
+    {
+        lower_bound(root->right, value, minimum);
+    }
+}
+
+Root* delete(Root* root, int value)
 {
     if(root == NULL)
     {
         printf("miss\n");
-        return;
+        return root;
     }
     if(root->value > value)
     {
-        delete(root->left, value);
+        root->left = delete(root->left, value);
     }
     else if (root->value < value)
     {
-        delete(root->right, value);
+        root->right = delete(root->right, value);
     }
     else
     {
-        
+        if(root->left == NULL)
+        {
+            Root* temp = root->right;
+            free(root);
+            printf("removed\n");
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            Root* temp = root->left;
+            free(root);
+            printf("removed\n");
+            return temp;
+        }
+        Root* step = root->right;
+        while (step->left != NULL)
+        {
+            step = step->left;
+        }
+        root->value = step->value;
+        root->right = delete(root->right, step->value);
     }
+    return rebalance(root); 
 }
+
+
 Root* add(Root* root, int value)
 {
     if(root == NULL)
     {   
         Root* new = (Root*)malloc(sizeof(Root));
         new->value = value;
-        new->height = 1;
+        new->height = 0;
         new->left = new->right = NULL;
         printf("added\n");
         return new;
@@ -128,27 +174,12 @@ Root* add(Root* root, int value)
     else
     {
         printf("dupe\n");
-        return;
+        return root;
     }
     
     return rebalance(root);
 }
 
-void printInorder(Root* root, FILE* out)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    // First recur on left child
-    printInorder(root->left, out);
-
-    // Then print the data of node
-    fwrite(&root->value, sizeof(int), 1, out);
- 
-    // Now recur on right child
-    printInorder(root->right, out);
-}
 void freeTree(Root* root)
 {
     if (root == NULL)
@@ -163,21 +194,38 @@ void freeTree(Root* root)
 
 int main()
 {
-    FILE *in = fopen("input.bin","rb");
-    FILE *out = fopen("output.bin","wb");
     int length;
-    fread(&length, sizeof(int), 1, in);
-    int* array = (int*)malloc(sizeof(int) * length);
-    fread(array, sizeof(int), length, in);
+    scanf("%d", &length);
     Root* root = NULL;
     for(int step = 0; step < length; step++)
     {
-        root = add(root, array[step]);
+        int minimum = minimal;
+        char operation[7];
+        int number;
+        scanf("%s", operation);
+        scanf("%d", &number);
+        if (strcmp(operation, "add") == 0)
+        {
+            root = add(root, number);
+        }
+        else if(strcmp(operation, "remove") == 0)
+        {
+            root = delete(root, number);
+        }
+        else if(strcmp(operation, "lower") == 0)
+        {
+            lower_bound(root, number, &minimum);
+            if (minimum == minimal)
+            {
+                printf("###\n");
+            }
+            else
+            {
+                printf("%d\n", minimum);
+            }
+        }
     }
-    printInorder(root, out);
-	free(array);
+    //printInorder(root);
     freeTree(root);
-	fclose(in);
-	fclose(out);
     return 0;
 }
