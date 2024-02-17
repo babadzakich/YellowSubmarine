@@ -63,9 +63,12 @@ int main()
             {
                     if (matrix[step2][currColl] != 0)
                     {
-                        long long* temp = matrix[step];
-                        matrix[step] = matrix[step2];
-                        matrix[step2] = temp;
+                        for(int step3 = 0; step3 <= variables; step3++)
+                        {
+                            long long temp = matrix[step][step3];
+                            matrix[step][step3] = matrix[step2][step3];
+                            matrix[step2][step3] = temp;
+                        }
                     }
                     
             }
@@ -103,10 +106,13 @@ int main()
 
         if (!bublik)
         {
-            long long* temp = matrix[end];
-            matrix[end] = matrix[start];
-            matrix[start] = temp;
-            end--;
+            for(int step = 0; step <= variables; step++)
+            {
+                long long* temp = matrix[end];
+                matrix[end] = matrix[start];
+                matrix[start] = temp;
+            }
+                end--;
         }
         else start ++;
     }
