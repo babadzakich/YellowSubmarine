@@ -1,65 +1,40 @@
 #include<stdio.h>
 #include<stdlib.h>
+#define MOD 1000000007
 
-long long bpow(long long x, long long y)
+long long mod(long long x, long long mod) 
 {
-    long long res = 1;
-    while (y)
+    return ((x % mod + mod) % mod);
+}
+
+int Euclid(long long a, long long b) 
+{
+
+    long long x, y, q, r, x1 = 0, x2 = 1, y1 = 1, y2 = 0;
+
+    if (b == 0) 
     {
-        if (y & 1)
-        {
-            res *= x;
-        }
-        x *= x;
-        y >>= 1;
+        return 1;
     }
-    return res;
-}
 
-long long gcd(long long a, long long b) { return (b == 0 ? a : gcd(b, a%b)); }
+    x2 = 1, x1 = 0, y2 = 0, y1 = 1;
 
-long long lcm(long long a, long long b)
-{
-    long long delimeter = gcd(a,b);
-    long long koef = a / delimeter;
-    return b*koef;
-}
-
-long long phi(long long x)
-{
-    long long res = 1;
-    for(long long step = 2; step*step <= x; step++)
+    while (b > 0)
     {
-        if (!(x%step)) 
-        {
-            res *= step-1;
-            x /= step;
-            while(!(x%step))
-            {
-                res *= step;
-                x /= step;
-            }
-        }
-    }
-    if (x != 1) res *= (x-1);
-    return res;
-}
 
+        q = a / b, r = a - q * b;
 
-int Euclid(int a, int b, int* x, int* y) {
-    if (b == 0) {
-        *x = 1;
-        *y = 0;
-        return a;
+        x = x2 - q * x1, y = y2 - q * y1;
+
+        a = b, b = r;
+
+        x2 = x1, x1 = x, y2 = y1, y1 = y;
+
     }
 
-    int x1, y1;
-    int gcd = Euclid(b, a % b, &x1, &y1);
+    x = x2, y = y2;
+    return x;
 
-    *x = y1;
-    *y = x1 - (a / b) * y1;
-
-    return gcd;
 }
 
 
@@ -84,19 +59,14 @@ int main()
         scanf("%lld", &remainders[step]);
     } 
     
-    for(int step = 0; step < modulesNumber; step++)
-    {
-        solve[step] = delimeters / modules[step];
-    }
     
     long long res = 0;
     for(int step = 0; step < modulesNumber; step++)
     {
-        int x = 1, y = 0;
-        Euclid(solve[step],modules[step], &x, &y);
-        x = (x % modules[step] + modules[step]) % modules[step]; 
-        res += (solve[step]*remainders[step] * (long long)x);
-        res %= delimeters;
+        long long delimeter = delimeters / modules[step];
+        long long invElem = Euclid(mod(delimeter, modules[step]), modules[step]);
+        
+        res = mod(res + delimeter * mod(remainders[step] * invElem, modules[step]),delimeters);
     }
     printf("%lld", res);
     return 0;
