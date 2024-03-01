@@ -45,7 +45,6 @@ int main()
     
     long long* modules = (long long*)malloc(sizeof(long long) * modulesNumber);
     long long* remainders = (long long*)malloc(sizeof(long long) * modulesNumber);
-    long long* solve = (long long*)malloc(sizeof(long long) * modulesNumber);
     
     long long delimeters = 1;
     for(int step = 0; step < modulesNumber; step++)
@@ -69,5 +68,7 @@ int main()
         res = mod(res + delimeter * mod(remainders[step] * invElem, modules[step]),delimeters);
     }
     printf("%lld", res);
+    free(modules);
+    free(remainders);
     return 0;
 }
