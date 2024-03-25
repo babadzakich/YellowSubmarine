@@ -1,0 +1,1 @@
+gcc stringDL.c -shared -fPIC -o string.so

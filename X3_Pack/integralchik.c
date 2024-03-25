@@ -36,12 +36,19 @@ int main(void)
         scanf("%lf %lf %lf %lf", &x.c0, &x.c1, &x.c2, &x.c3);
         scanf("%lf %lf %lf %lf", &y.c0, &y.c1, &y.c2, &y.c3);
         scanf("%lf %lf %lf %lf", &z.c0, &z.c1, &z.c2, &z.c3);
-        
+        double ab;
         double leap = (r - l) / 150;
         for(int step = 0; step < 150; step++)
         {
             double a = step * leap + l, b = (step+1) * leap + l;
-            simpson += (function(x,y,z, a, l) + 4 * function(x,y,z,(a+b)/2,l) + function(x,y,z,b,l)) * (b - a) / 6;
+            
+            if(step == 0)
+            {
+                ab = function(x,y,z, a, l);
+            }
+            double bb = function(x,y,z, b, l);
+            simpson += (ab + 4 * function(x,y,z,(a+b)/2,l) + bb) * (b - a) / 6;
+            ab = bb;
         }
     }
     printf("%.20f", simpson);

@@ -11,7 +11,9 @@ LongNum AlgorithmD(LongNum u, LongNum v)
 {
     //D1
     int d = 9/v.number[v.len-1];
-
+    d = d == 9 ? 8 : d;
+    if (d < 8 && d > 4) d = 4;
+    d = d == 3 ? 2 : d;
     u.len++;
     u.number = (int*)realloc(u.number, sizeof(int) * u.len);
 
@@ -40,6 +42,10 @@ LongNum AlgorithmD(LongNum u, LongNum v)
         v.number[step+1] += v.number[step] / 10;
         v.number[step] %= 10;
     }
+    LongNum quotient;
+    quotient.len = u.len - v.len;
+    quotient.number = (int*)malloc(sizeof(int) * quotient.len);
+    
     //D2 - D7
     for(int j = u.len - v.len - 1; j >= 0; j--)
     {
@@ -74,7 +80,20 @@ LongNum AlgorithmD(LongNum u, LongNum v)
         {
             if (u.number[k])
             u.number[k] -= vsub.number[k - j];
-
         }
+        for(int k = j; k < j + v.len; k++)
+        {
+            if (u.number[k] < 0)
+            {
+                u.number[k] += 10;
+                u.number[k+1] --;
+            }
+        }
+        if (u.number[j+v.len] < 0)
+        {
+            u.number[j+v.len]++;
+        }
+        if (u.number[])
+        quotient.number[v.len] = q;
     }
 }
