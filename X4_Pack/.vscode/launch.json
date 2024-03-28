@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "/home/hailrake/Desktop/NSU/1 Course/1 Semester/ImperativeProgramming/YellowSubmarine/X4_Pack/coreDL",
+      "program": "/home/hailrake/Desktop/NSU/1 Course/1 Semester/ImperativeProgramming/YellowSubmarine/X4_Pack/coreDL/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

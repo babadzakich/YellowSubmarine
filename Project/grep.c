@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include"ahocorassic.h"
 char buffer[1024];
 
 int main(int argc, char** argv)
@@ -20,49 +21,18 @@ int main(int argc, char** argv)
         buffer[bufLen++] = curr;
         if (curr == '\n')
         {
-            for(int step = 0; step < bufLen; step++)
+            initTrie(buffer, bufLen);
+            if (isInTrie(pattern, length))
             {
-                // printf("%c\n", buffer[step]);
-                if(buffer[step] == pattern[pos])
-                {
-                    // printf("%c\n", pattern[pos]);
-                    pos++;
-                    if(pos == length)
-                    {
-                        printf("%s\n", buffer);
-                        pos = 0;
-                        break;
-                    }
-                }
-                else
-                {
-                    pos = 0;
-                }
-                
+                printf("It is indeed here\n");
+            }
+            else
+            {
+                printf("What a pity, it`s not here\n");
             }
             memset(buffer, 0, bufLen);
             bufLen = 0;
         }
-    }
-    for(int step = 0; step < bufLen; step++)
-    {
-        // printf("%c\n", buffer[step]);
-        if(buffer[step] == pattern[pos])
-        {
-            // printf("%c\n", pattern[pos]);
-            pos++;
-            if(pos == length)
-            {
-                printf("%s\n", buffer);
-                pos = 0;
-                break;
-            }
-        }
-        else
-        {
-            pos = 0;
-        }
-        
-    }
+    } 
     return 0;
 }
