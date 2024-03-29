@@ -26,8 +26,8 @@ IntegerSet* CreateSet(int* arr, int len)
     for(int step = 1; step < len; step++)
     {
         if (newArr->arr[step] == newArr->arr[step-1])
-        free(newArr->arr);
-        free(newArr);
+        if(newArr->arr) free(newArr->arr);
+        if(newArr) free(newArr);
         return 0;
     }
     newArr->len = len;
@@ -55,4 +55,9 @@ int IsInSet(IntegerSet* set, int num)
         }
     }
     return 0;
+}
+
+void DeleteSet(IntegerSet* set)
+{
+    if(set->arr)free(set->arr);
 }

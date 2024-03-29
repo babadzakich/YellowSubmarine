@@ -3,4 +3,5 @@
 typedef struct IntegerSet IntegerSet;
 IntegerSet* CreateSet(int* arr, int len);
 int IsInSet(IntegerSet* set, int num);
+void DeleteSet(IntegerSet* set);
 #endif
